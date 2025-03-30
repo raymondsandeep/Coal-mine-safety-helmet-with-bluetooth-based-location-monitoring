@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coal Mine Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #1e1e2f;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+    }
+    .container{
+      margin: 0;
+      padding: 0;
+      background: url('footsteps.png') no-repeat center center/cover;
+      height: 32vh;
+      border-radius: 10px;
+      background-color: #4c5456;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .container {
+  display: flex;
+}
+
+.wall-box {
+  width: 100px;
+  height: 100px;
+  margin: 30px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding: 20px;
+  position: relative;
+}
+
+.icon-container {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 10px;
+  transition: background-color 0.3s ease;
+}
+
+.icon-container i {
+  font-size: 24px;
+  color: #333;
+}
+
+/* Red alert animation */
+.red {
+  background-color: rgba(217, 255, 0, 0.414) !important;
+  box-shadow: 0 0 20px rgba(230, 197, 6, 0.966);
+}
+
+h5 {
+  margin: 10px 0;
+  font-size: 18px;
+  color: #e1e0ae;
+}
+
+p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #e1e0ae;
+}
+    .navbar {
+      background-color: #2a2a40;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    .navbar-brand {
+      font-size: 1.5rem;
+      color: #fff;
+      font-weight: bold;
+    }
+    .wall-box {
+    padding: 10px;
+    margin-top: 10px;
+    text-align: center;
+    background-color: transparent;
+  }
+  .wall-box.red {
+    background-color: #ff4d4d;
+    color: white;
+  }
+    .card {
+      background-color: #2f2f45;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 1.25rem;
+      color: #ffffff;
+    }
+    .card-icon {
+      font-size: 2.5rem;
+      color: #ffc107;
+    }
+    .data-value {
+      font-size: 2rem;
+      color: #ffffff;
+      font-weight: bold;
+    }
+    .alert-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: red;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      z-index: 1000;
+    }
+    .raymond{
+      margin-top: 210px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Coal Mine Dashboard</a>
+    </div>
+  </nav>
+<div class="d-flex flex-row gap-3">
+  <div class="col-md-4">
+    <h2>Person 1</h2>
+    <div class="card text-center">
+      <div class="card-body">
+        <i class="fas fa-tint card-icon"></i>
+        <h5 class="card-title">Humidity</h5>
+        <p class="data-value" id="humidity">Loading...</p>
+      </div>
+    </div>
+    <div class="card text-center">
+      <div class="card-body">
+        <i class="fas fa-thermometer-half card-icon"></i>
+        <h5 class="card-title">Temperature</h5>
+        <p class="data-value" id="temperature">Loading...</p>
+      </div>
+    </div>
+    <div class="card text-center">
+      <div class="card-body">
+        <i class="fas fa-wind card-icon"></i>
+        <h5 class="card-title">MQ2 Value</h5>
+        <p class="data-value" id="mq2">Loading...</p>
+      </div>
+    </div>
+    
+    <!-- Box for WallBLE1 -->
+    <div class="container">
+      <!-- Box for WallBLE1 -->
+      <div id="wall-ble1-box" class="wall-box raymond">
+        <div class="icon-container" id="icon1">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <h5>B1</h5>
+      </div>
+  
+      <!-- Box for WallBLE2 -->
+      <div id="wall-ble2-box" class="wall-box">
+        <div class="icon-container" id="icon2">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <h5>B2</h5>
+      </div>
+    </div>
+  
+    <!-- Alert Popup -->
+    <div id="alert-popup" style="display: none; background: red; color: white; padding: 10px; margin-top: 10px;">
+      Warning! Fall Detected!
+    </div>
+    <div id="emer-popup" style="display: none; background: red; color: white; padding: 10px; margin-top: 10px;">
+      Warning! Emergency Button Clicked!
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <h2>Person 2</h2>
+    <div class="card text-center">
+      <div class="card-body">
+        <i class="fas fa-tint card-icon"></i>
+        <h5 class="card-title">Humidity</h5>
+        <p class="data-value" id="humidity2">Loading...</p>
+      </div>
+    </div>
+    <div class="card text-center">
+      <div class="card-body">
+        <i class="fas fa-thermometer-half card-icon"></i>
+        <h5 class="card-title">Temperature</h5>
+        <p class="data-value" id="temperature2">Loading...</p>
+      </div>
+    </div>
+    <div class="card text-center">
+      <div class="card-body">
+        <i class="fas fa-wind card-icon"></i>
+        <h5 class="card-title">MQ2 Value</h5>
+        <p class="data-value" id="mq2_2">Loading...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <h2>Person 3</h2>
+    <div class="card text-center">
+      <div class="card-body">
+        <i class="fas fa-tint card-icon"></i>
+        <h5 class="card-title">Humidity</h5>
+        <p class="data-value" id="humidity3">Loading...</p>
+      </div>
+    </div>
+    <div class="card text-center">
+      <div class="card-body">
+        <i class="fas fa-thermometer-half card-icon"></i>
+        <h5 class="card-title">Temperature</h5>
+        <p class="data-value" id="temperature3">Loading...</p>
+      </div>
+    </div>
+    <div class="card text-center">
+      <div class="card-body">
+        <i class="fas fa-wind card-icon"></i>
+        <h5 class="card-title">MQ2 Value</h5>
+        <p class="data-value" id="mq2_3">Loading...</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+  <script>
+   async function fetchData() {
+    try {
+      const response = await fetch("http://localhost:5000/data");
+      const data = await response.json();
+
+      // Update sensor data
+      document.getElementById("humidity").textContent = data.humidity.toFixed(2) + "%";
+      document.getElementById("temperature").textContent = data.temperature.toFixed(2) + "°C";
+      document.getElementById("mq2").textContent = data.mq2_value;
+      console.log(data.button_state)
+      if (data.button_state === 1) {
+        let popup = document.getElementById("emer-popup");
+        popup.style.display = "block";
+        setTimeout(() => {
+          popup.style.display = "none";
+        }, 3000);
+      }
+      if (data.motion_detected === 1) {
+        let popup = document.getElementById("alert-popup");
+        popup.style.display = "block";
+        setTimeout(() => {
+          popup.style.display = "none";
+        }, 3000);
+      }
+
+      // Handle wall box colors
+      const wallBox1 = document.getElementById("wall-ble1-box");
+      const wallBox2 = document.getElementById("wall-ble2-box");
+      console.log(data.wall_name)
+      if (data.wall_name === "WallBLE1") {
+        wallBox1.classList.add("red");
+        wallBox2.classList.remove("red");
+      } else if (data.wall_name === "WallBLE2") {
+        wallBox2.classList.add("red");
+        wallBox1.classList.remove("red");
+      } else {
+        wallBox1.classList.remove("red");
+        wallBox2.classList.remove("red");
+          }
+
+      // Button alert popup()
+
+      // Sensor warnings
+      if (data.humidity > 82) alert("Person 1 Warning: High Humidity!");
+      if (data.temperature >= 35) alert("Person 1 Warning: High Temperature!");
+      if (data.mq2_value > 345) alert("Person 1 Warning: High MQ2 Value!");
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+  setInterval(fetchData, 1000);
+  fetchData();
+  </script>
+</body>
+</html>
